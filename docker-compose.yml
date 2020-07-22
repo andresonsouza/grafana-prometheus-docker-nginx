@@ -2,7 +2,6 @@ version: '2.2'
 
 volumes: 
   grafana-storage:
-  
   prometheus:
 
 services:
