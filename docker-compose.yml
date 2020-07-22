@@ -1,0 +1,37 @@
+version: '2.2'
+
+volumes: 
+  grafana-storage:
+  
+  prometheus:
+
+services:
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx-proxy/conf.d:/etc/nginx/conf.d:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - web-app
+
+  web-app:
+    build:
+      dockerfile: app.dockerfile
+      context: ./app/
+    image: asouza/app-example
+  
+  prometheus:
+    image: prom/prometheus
+    command: ["--config.file=/prometheus-data/prometheus.yml"]
+    volumes: 
+      - ./prometheus-data:/prometheus-data
+      - prometheus:/prometheus
+  
+  grafana:
+    image: grafana/grafana
+    volumes: 
+      - grafana-storage:/var/lib/grafana
+    depends_on: 
+      - prometheus
