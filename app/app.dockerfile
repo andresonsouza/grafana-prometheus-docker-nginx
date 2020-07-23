@@ -6,4 +6,4 @@ RUN npm install
 RUN npm install --save express prom-client
 ENTRYPOINT ["npm", "start"]
 # Indica/informa qual porta o serviço(node) está expondo.
-EXPOSE 3030
+EXPOSE 3001

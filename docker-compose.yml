@@ -12,6 +12,9 @@ services:
       - ./nginx-proxy/conf.d:/etc/nginx/conf.d:ro
     ports:
       - "80:80"
+    networks:
+      production-network:
+        ipv4_address: "192.168.240.2"
     depends_on:
       - web-app
 
@@ -20,6 +23,9 @@ services:
       dockerfile: app.dockerfile
       context: ./app/
     image: asouza/app-example
+    networks:
+      production-network:
+        ipv4_address: "192.168.240.3"
   
   prometheus:
     image: prom/prometheus
@@ -27,6 +33,9 @@ services:
     volumes: 
       - ./prometheus-data:/prometheus-data
       - prometheus:/prometheus
+    networks:
+      production-network:
+        ipv4_address: "192.168.240.4"
   
   grafana:
     image: grafana/grafana
@@ -34,3 +43,14 @@ services:
       - grafana-storage:/var/lib/grafana
     depends_on: 
       - prometheus
+    networks:
+      production-network:
+        ipv4_address: "192.168.240.5"
+
+networks:
+  production-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "192.168.240.0/24"
+          gateway: "192.168.240.1"
